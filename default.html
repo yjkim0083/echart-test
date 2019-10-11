@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="./node_modules/echarts/dist/echarts.min.js"></script>
+</head>
+
+<body>
+    <!-- preparing a DOM with width and height for ECharts -->
+    <div id="main" style="width:100%; height:600px;"></div>
+    <div id="table" style="width:100%; height:400px;"></div>
+    <script type="text/javascript">
+        // based on prepared DOM, initialize echarts instance
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var _data = 'tfjob-example-4hzvlkvl,0.955299973488,0.017876315772583744,121\ntfjob-example-qrqlrn57,0.950600028038,0.03395365379004999,160\ntfjob-example-p8fp25l9,0.950299978256,0.021012643672972616,104\ntfjob-example-tn4k8bgm,0.955699980259,0.019167699755796075,159\ntfjob-example-xw9d6zkl,0.941100001335,0.025979111108939683,105\ntfjob-example-m454nh4c,0.970899999142,0.01254305723860266,185\ntfjob-example-kfmpcgnm,0.954200029373,0.016603838223839984,103\ntfjob-example-wlxsdrj7,0.924000024796,0.04543691648247184,110\ntfjob-example-czscwb8l,0.960799992085,0.015475555577250315,124\ntfjob-example-nzh6ssnd,0.950100004673,0.027879830599572712,156\ntfjob-example-g655kbgk,0.92720001936,0.04550576660222139,138\ntfjob-example-qlzk4n4n,0.935100018978,0.044097470699255605,126';
+        var _header = 'trialName,accuracy_1,--learning_rate,--batch_size';
+
+
+
+        function extractHeader(data) {
+            var arr = data.split(",");
+            var result = [];
+
+            var index = 0;
+            arr.forEach(element => {
+                if (index === 0) {
+                    index += 1;
+                } else {
+                    var o = {};
+                    o['dim'] = index++ - 1;
+                    o['name'] = element;
+                    result.push(o);
+                }
+            });
+
+            console.log(result);
+            return result;
+        }
+
+        function extractData(data) {
+            var arr = data.split("\n");
+            //console.log(arr);
+
+            var result = [];
+
+            arr.forEach(element => {
+                _element = element.split(",");
+                var tmp = [];
+                //tmp.push(_element[0]);
+                tmp.push(_element[1]);
+                tmp.push(_element[2]);
+                tmp.push(_element[3]);
+                result.push(tmp);
+            });
+
+            console.log(result);
+            return result;
+        }
+
+        // specify chart configuration item and data
+        option = {
+            parallelAxis: '',
+            // [
+            //     { dim: 0, name: 'accuracy_1' },
+            //     { dim: 1, name: '--learning_rate' },
+            //     { dim: 2, name: '--batch_size' },
+            //     // {
+            //     //     dim: 3,
+            //     //     name: 'Score',
+            //     //     type: 'category',
+            //     //     data: ['Excellent', 'Good', 'OK', 'Bad']
+            //     // }
+            // ],
+            series: {
+                type: 'parallel',
+                smooth: true,
+                lineStyle: {
+                    normal: {
+                        width: 2,
+                        opacity: 0.5
+                    }
+                },
+                data: ''
+                // [
+                //     [12.99, 100, 82],
+                //     [9.99, 80, 77],
+                //     [20, 120, 60],
+                //     [11, 130, 100]
+                // ]
+            },
+            parallel: {
+                // bottom: '5%',
+                // left: '5%',
+                // height: '31%',
+                // width: '55%',
+                parallelAxisDefault: {
+                    type: 'value',
+                    name: 'AQI指数',
+                    nameLocation: 'end',
+                    nameGap: 20,
+                    splitNumber: 3,
+                    nameTextStyle: {
+                        fontSize: 14
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#555'
+                        }
+                    },
+                    axisTick: {
+                        lineStyle: {
+                            color: '#555'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#555'
+                        }
+                    }
+                }
+
+            }
+        };
+
+        // use configuration item and data specified to show chart
+        option.parallelAxis = extractHeader(_header);
+        option.series.data = extractData(_data);
+        myChart.setOption(option);
+    </script>
+</body>
+
+</html>
